@@ -125,7 +125,6 @@ bridge_apply() {
     bridge_write_portal_config
     ynh_app_setting_set --key=bridge_permission --value="$bridge_permission"
     ynh_app_setting_set --key=bridge_relative_path --value="$bridge_relative_path"
-    ynh_print_success "Liaison ARCenal opérationnelle."
 }
 
 bridge_test() {
@@ -145,7 +144,6 @@ bridge_test() {
         --data "$body" "$gateway_url") || ynh_die "La passerelle QSSE ne répond pas correctement."
     status=$(printf '%s' "$response" | php -r '$data=json_decode(stream_get_contents(STDIN),true);echo is_array($data)&&($data["status"]??"")==="ok"?"ok":"invalid";')
     [[ "$status" == "ok" ]] || ynh_die "La passerelle a répondu, mais son contrôle de sécurité a échoué."
-    ynh_print_success "Liaison ARCenal vérifiée."
 }
 
 bridge_detach() {
@@ -164,5 +162,4 @@ if permission in user_permission_list(full=True, apps=[app])["permissions"]:
     fi
     ynh_app_setting_delete --key=bridge_permission
     ynh_app_setting_delete --key=bridge_relative_path
-    ynh_print_success "Liaison ARCenal déconnectée."
 }

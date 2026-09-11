@@ -4,7 +4,7 @@ id = "arcenalbridge"
 name = "ARCenal Bridge"
 description.fr = "Liaison administrée entre ARCenal Portail et ARCenal QSSE pour Dolibarr"
 description.en = "Managed connection between ARCenal Portal and ARCenal QSSE for Dolibarr"
-version = "1.0.3~ynh1"
+version = "1.0.4~ynh1"
 maintainers = ["ARCenal"]
 
 [upstream]
