@@ -1,0 +1,28 @@
+#!/bin/bash
+source _common.sh
+source /usr/share/yunohost/helpers
+
+get__gateway_key() {
+    echo YNH_NULL
+}
+
+set__gateway_key() {
+    if [[ -n "${gateway_key:-}" ]]; then
+        [[ "$gateway_key" =~ ^[a-fA-F0-9]{64}$ ]] || ynh_die "La clé d’appairage est invalide."
+        ynh_app_setting_set --key=gateway_key --value="$gateway_key"
+    fi
+}
+
+run__apply_pairing() {
+    bridge_apply
+}
+
+run__test_connection() {
+    bridge_test
+}
+
+run__detach() {
+    bridge_detach
+}
+
+ynh_app_config_run "$1"

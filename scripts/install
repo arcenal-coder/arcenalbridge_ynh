@@ -1,0 +1,6 @@
+#!/bin/bash
+source _common.sh
+source /usr/share/yunohost/helpers
+
+ynh_script_progression "Connexion d’ARCenal Portail à ARCenal QSSE..."
+bridge_apply

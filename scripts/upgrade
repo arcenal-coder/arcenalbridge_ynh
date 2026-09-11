@@ -1,0 +1,6 @@
+#!/bin/bash
+source _common.sh
+source /usr/share/yunohost/helpers
+
+ynh_script_progression "Vérification de la liaison ARCenal..."
+bridge_apply

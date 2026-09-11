@@ -1,0 +1,46 @@
+version = "1.0"
+
+[main]
+name.fr = "Liaison ARCenal"
+name.en = "ARCenal connection"
+
+    [main.connection]
+    name.fr = "Connexion QSSE"
+    name.en = "QSSE connection"
+        [main.connection.portal_app]
+        ask.fr = "Portail équipier"
+        ask.en = "Employee portal"
+        type = "app"
+        [main.connection.dolibarr_app]
+        ask.fr = "Dolibarr QSSE"
+        ask.en = "QSSE Dolibarr"
+        type = "app"
+        [main.connection.gateway_url]
+        ask.fr = "URL HTTPS de la passerelle"
+        ask.en = "Gateway HTTPS URL"
+        type = "url"
+        [main.connection.gateway_key]
+        ask.fr = "Nouvelle clé d’appairage"
+        ask.en = "New pairing key"
+        type = "password"
+        bind = "null"
+        help.fr = "Laisser vide pour conserver la clé actuelle."
+        help.en = "Leave empty to keep the current key."
+
+    [main.actions]
+    name.fr = "Actions"
+    name.en = "Actions"
+        [main.actions.apply_pairing]
+        ask.fr = "Connecter ou réparer la liaison"
+        ask.en = "Connect or repair the connection"
+        type = "button"
+        style = "success"
+        [main.actions.test_connection]
+        ask.fr = "Vérifier la liaison"
+        ask.en = "Check connection"
+        type = "button"
+        [main.actions.detach]
+        ask.fr = "Déconnecter la liaison"
+        ask.en = "Disconnect"
+        type = "button"
+        style = "danger"

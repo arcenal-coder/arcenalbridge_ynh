@@ -1,0 +1,5 @@
+#!/bin/bash
+source _common.sh
+source /usr/share/yunohost/helpers
+
+bridge_detach

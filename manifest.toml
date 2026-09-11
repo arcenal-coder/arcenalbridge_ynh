@@ -1,0 +1,44 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/manifest.v2.schema.json
+packaging_format = 2
+id = "arcenalbridge"
+name = "ARCenal Bridge"
+description.fr = "Liaison administrée entre ARCenal Portail et ARCenal QSSE pour Dolibarr"
+description.en = "Managed connection between ARCenal Portal and ARCenal QSSE for Dolibarr"
+version = "1.0.0~ynh1"
+maintainers = ["ARCenal"]
+
+[upstream]
+license = "Proprietary"
+code = "https://github.com/arcenal-coder/arcenalbridge_ynh"
+
+[integration]
+yunohost = ">= 12.1"
+helpers_version = "2.1"
+architectures = "all"
+multi_instance = false
+ldap = false
+sso = false
+disk = "1M"
+ram.build = "10M"
+ram.runtime = "5M"
+
+[install]
+    [install.portal_app]
+    ask.fr = "Application ARCenal Portail à connecter"
+    ask.en = "ARCenal Portal application to connect"
+    type = "app"
+    [install.dolibarr_app]
+    ask.fr = "Application Dolibarr qui héberge ARCenal QSSE"
+    ask.en = "Dolibarr application hosting ARCenal QSSE"
+    type = "app"
+    [install.gateway_url]
+    ask.fr = "URL HTTPS de la passerelle QSSE"
+    ask.en = "QSSE gateway HTTPS URL"
+    type = "url"
+    example = "https://erp.example.org/custom/arcenalqsse/gateway.php"
+    [install.gateway_key]
+    ask.fr = "Clé d’appairage QSSE"
+    ask.en = "QSSE pairing key"
+    type = "password"
+
+[resources]
