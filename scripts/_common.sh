@@ -5,6 +5,7 @@ bridge_load_settings() {
     dolibarr_app=$(ynh_app_setting_get --key=dolibarr_app)
     gateway_url=$(ynh_app_setting_get --key=gateway_url)
     gateway_key=$(ynh_app_setting_get --key=gateway_key)
+    gateway_entity=$(ynh_app_setting_get --key=gateway_entity)
     # YunoHost deliberately does not persist password-type install arguments.
     # During first installation, keep the one-time code supplied by the
     # installer; later upgrades rely on the exchanged gateway key instead.
@@ -78,14 +79,17 @@ bridge_exchange_pairing() {
     if [[ "$gateway_key" =~ ^[a-f0-9]{64}$ ]]; then
         return 0
     fi
-    local response
+    local response pairing_result
     set +x
     response=$(curl --silent --show-error --fail --connect-timeout 8 --max-time 20 --request POST \
         --header 'Content-Type: application/json' \
         --data "{\"operation\":\"pair\",\"pairing_code\":\"$pairing_code\"}" \
         "$gateway_url") || ynh_die "Le code d’appairage a été refusé ou la passerelle QSSE est indisponible."
-    gateway_key=$(printf '%s' "$response" | php -r '$data=json_decode(stream_get_contents(STDIN),true);$key=is_array($data)?($data["gateway_key"]??""):"";if(!is_string($key)||!preg_match("/^[a-f0-9]{64}$/D",$key)){fwrite(STDERR,"Réponse d’appairage invalide\n");exit(1);}echo $key;') || ynh_die "Réponse d’appairage QSSE invalide."
+    pairing_result=$(printf '%s' "$response" | php -r '$data=json_decode(stream_get_contents(STDIN),true);$key=is_array($data)?($data["gateway_key"]??""):"";$entity=is_array($data)?($data["gateway_entity"]??0):0;if(!is_string($key)||!preg_match("/^[a-f0-9]{64}$/D",$key)||!is_int($entity)||$entity<1){fwrite(STDERR,"Réponse d’appairage invalide\n");exit(1);}echo $key."\n".$entity;') || ynh_die "Réponse d’appairage QSSE invalide."
+    gateway_key=$(printf '%s\n' "$pairing_result" | sed -n '1p')
+    gateway_entity=$(printf '%s\n' "$pairing_result" | sed -n '2p')
     ynh_app_setting_set --key=gateway_key --value="$gateway_key"
+    ynh_app_setting_set --key=gateway_entity --value="$gateway_entity"
     ynh_app_setting_delete --key=pairing_code
 }
 
@@ -94,13 +98,14 @@ bridge_write_portal_config() {
     portal_dir=$(ynh_app_setting_get --app="$portal_app" --key=install_dir)
     config_path="$portal_dir/config.php"
     install -d -o "$portal_app" -g www-data -m 750 "$portal_dir"
-    BRIDGE_CONFIG_PATH="$config_path" BRIDGE_GATEWAY_URL="$gateway_url" BRIDGE_GATEWAY_KEY="$gateway_key" php -r '
+    BRIDGE_CONFIG_PATH="$config_path" BRIDGE_GATEWAY_URL="$gateway_url" BRIDGE_GATEWAY_KEY="$gateway_key" BRIDGE_GATEWAY_ENTITY="${gateway_entity:-0}" php -r '
 $path = getenv("BRIDGE_CONFIG_PATH");
 $config = [
     "trusted_sso" => true,
     "paired" => true,
     "gateway_url" => getenv("BRIDGE_GATEWAY_URL"),
     "gateway_key" => getenv("BRIDGE_GATEWAY_KEY"),
+    "gateway_entity" => (int) getenv("BRIDGE_GATEWAY_ENTITY"),
 ];
 if (file_put_contents($path, "<?php\nreturn " . var_export($config, true) . ";\n", LOCK_EX) === false) {
     fwrite(STDERR, "Unable to write portal configuration\n");
@@ -127,7 +132,7 @@ bridge_test() {
     bridge_load_settings
     bridge_validate
     local body timestamp nonce signature response status
-    body='{"operation":"health","uid":"__bridge_health"}'
+    body=$(printf '{\"operation\":\"health\",\"uid\":\"__bridge_health\",\"entity\":%d}' "${gateway_entity:-0}")
     timestamp=$(date +%s)
     nonce=$(openssl rand -hex 16) || ynh_die "Impossible de générer un contrôle de liaison."
     set +x
