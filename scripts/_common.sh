@@ -68,6 +68,10 @@ if permission in permissions:
 else:
     permission_create(permission, allowed=["visitors"], url=relative, auth_header=False, show_tile=False, protected=False)
 '
+    # Permission changes are stored immediately but SSOwat serves a generated
+    # configuration. Rebuild it before the first signed call, otherwise a new
+    # installation can receive a transient 403 even with a valid permission.
+    yunohost app ssowatconf >/dev/null
 }
 
 bridge_exchange_pairing() {
