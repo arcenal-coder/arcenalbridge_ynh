@@ -2,14 +2,15 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-get__gateway_key() {
+get__pairing_code() {
     echo YNH_NULL
 }
 
-set__gateway_key() {
-    if [[ -n "${gateway_key:-}" ]]; then
-        [[ "$gateway_key" =~ ^[a-fA-F0-9]{64}$ ]] || ynh_die "La clé d’appairage est invalide."
-        ynh_app_setting_set --key=gateway_key --value="$gateway_key"
+set__pairing_code() {
+    if [[ -n "${pairing_code:-}" ]]; then
+        [[ "$pairing_code" =~ ^[a-f0-9]{48}$ ]] || ynh_die "Le code d’appairage temporaire est invalide."
+        ynh_app_setting_set --key=pairing_code --value="$pairing_code"
+        ynh_app_setting_delete --key=gateway_key
     fi
 }
 

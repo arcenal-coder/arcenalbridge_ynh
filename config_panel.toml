@@ -19,13 +19,13 @@ name.en = "ARCenal connection"
         ask.fr = "URL HTTPS de la passerelle"
         ask.en = "Gateway HTTPS URL"
         type = "url"
-        [main.connection.gateway_key]
-        ask.fr = "Nouvelle clé d’appairage"
-        ask.en = "New pairing key"
+        [main.connection.pairing_code]
+        ask.fr = "Nouveau code d’appairage temporaire"
+        ask.en = "New temporary pairing code"
         type = "password"
         bind = "null"
-        help.fr = "Laisser vide pour conserver la clé actuelle."
-        help.en = "Leave empty to keep the current key."
+        help.fr = "Saisissez un code nouvellement créé dans ARCenal QSSE uniquement pour reconnecter le portail."
+        help.en = "Enter a newly generated ARCenal QSSE code only to reconnect the portal."
 
     [main.actions]
     name.fr = "Actions"

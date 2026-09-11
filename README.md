@@ -1,22 +1,22 @@
 # ARCenal Bridge for YunoHost
 
-ARCenal Bridge is the administrative connector between ARCenal Portail and the
-ARCenal QSSE Dolibarr module.
+ARCenal Bridge is the administration component that connects ARCenal Portal with the ARCenal QSSE module in Dolibarr.
 
-It owns the only cross-application operation: a protected YunoHost permission
-for the signed QSSE gateway. It never changes Dolibarr’s main permission and it
-does not grant employee access to Dolibarr.
+## Role
 
-## Installation order
+It selects both installed applications, verifies that the gateway address belongs to the chosen Dolibarr instance, creates a YunoHost permission limited to that route, exchanges the temporary module code, and writes the portal configuration.
 
-1. Activate ARCenal QSSE in Dolibarr and generate its pairing key.
-2. Install ARCenal Portail for the `equipiers` group.
-3. Install ARCenal Bridge, select the Portal and Dolibarr applications, and
-   provide the HTTPS gateway URL and pairing key.
-4. Use the Bridge configuration panel to check the connection.
+The portal never changes Dolibarr. Dolibarr never exposes its general interface to employees.
 
-## Operational guarantee
+## Administrator flow
 
-The portal and the bridge have separate update lifecycles. Updating ARCenal
-Portail never changes a Dolibarr permission. Bridge is the only package allowed
-to create, verify or remove the narrowly scoped gateway permission.
+1. Install ARCenal Portal and select the employee LDAP group.
+2. In Dolibarr, create a temporary code in ARCenal QSSE.
+3. Install ARCenal Bridge, select the portal and Dolibarr, then enter the displayed URL and code.
+4. Use the “Check connection” Bridge configuration button.
+
+The code is consumed once. To reconnect, generate a new code in Dolibarr and enter it in Bridge.
+
+## Status
+
+This branch is the new architecture baseline. It requires qualification on a YunoHost 12.1 staging instance before it can be published in the ARCenal catalog.

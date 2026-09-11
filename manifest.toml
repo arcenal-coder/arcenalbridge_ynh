@@ -36,9 +36,9 @@ ram.runtime = "5M"
     ask.en = "QSSE gateway HTTPS URL"
     type = "url"
     example = "https://erp.example.org/custom/arcenalqsse/gateway.php"
-    [install.gateway_key]
-    ask.fr = "Clé d’appairage QSSE"
-    ask.en = "QSSE pairing key"
+    [install.pairing_code]
+    ask.fr = "Code d’appairage temporaire ARCenal QSSE"
+    ask.en = "Temporary ARCenal QSSE pairing code"
     type = "password"
 
 [resources]
