@@ -5,7 +5,10 @@ bridge_load_settings() {
     dolibarr_app=$(ynh_app_setting_get --key=dolibarr_app)
     gateway_url=$(ynh_app_setting_get --key=gateway_url)
     gateway_key=$(ynh_app_setting_get --key=gateway_key)
-    pairing_code=$(ynh_app_setting_get --key=pairing_code)
+    # YunoHost deliberately does not persist password-type install arguments.
+    # During first installation, keep the one-time code supplied by the
+    # installer; later upgrades rely on the exchanged gateway key instead.
+    pairing_code="${pairing_code:-$(ynh_app_setting_get --key=pairing_code)}"
 }
 
 bridge_validate() {
