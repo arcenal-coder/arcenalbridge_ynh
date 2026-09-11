@@ -54,16 +54,19 @@ print(json.dumps({"permission": app + ".arcenalqsse_gateway", "relative": relati
 bridge_configure_permission() {
     BRIDGE_PERMISSION="$bridge_permission" BRIDGE_RELATIVE_PATH="$bridge_relative_path" yunohost tools shell -c '
 import os
-from yunohost.permission import permission_create, permission_url, user_permission_list
+from yunohost.permission import permission_create, permission_url, user_permission_list, user_permission_update
 
 permission = os.environ["BRIDGE_PERMISSION"]
 relative = os.environ["BRIDGE_RELATIVE_PATH"]
 app = permission.split(".", 1)[0]
 permissions = user_permission_list(full=True, apps=[app])["permissions"]
+# Every gateway operation verifies a one-time pairing code or HMAC signature.
+# It must be reachable without a YunoHost SSO session, only on this exact path.
 if permission in permissions:
     permission_url(permission, url=relative, auth_header=False)
+    user_permission_update(permission, protected=False, show_tile=False)
 else:
-    permission_create(permission, allowed=["visitors"], url=relative, auth_header=False, show_tile=False, protected=True)
+    permission_create(permission, allowed=["visitors"], url=relative, auth_header=False, show_tile=False, protected=False)
 '
 }
 
